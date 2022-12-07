@@ -3,10 +3,14 @@ import Image from "next/image";
 import Layout from "../components/Layout";
 import styles from "../styles/Home.module.css";
 
-export default function Home() {
+import React from "react";
+
+const Home = () => {
   return (
-    <div className={styles.container}>
-      <h1>hello</h1>
-    </div>
+    <Layout title="About Events">
+      <h1>Home</h1>
+    </Layout>
   );
-}
+};
+
+export default Home;

@@ -1,8 +1,10 @@
 import Head from "next/head";
+import { useRouter } from "next/router";
 import React, { FC, PropsWithChildren, ReactNode } from "react";
 import styles from "../styles/Layout.module.css";
 import Footer from "./Footer";
 import Header from "./Header";
+import Showcase from "./Showcase";
 
 type TLayoutProps = {
   title?: string;
@@ -17,6 +19,7 @@ const Layout: FC<TLayoutProps> = ({
   description,
   children,
 }) => {
+  const router = useRouter();
   return (
     <>
       <Head>
@@ -26,7 +29,10 @@ const Layout: FC<TLayoutProps> = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.container}>
-        <Header /> {children}
+        <Header />
+        {router.pathname === "/" && <Showcase />}
+        {children}
+
         <Footer />
       </div>
     </>

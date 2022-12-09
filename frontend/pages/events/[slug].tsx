@@ -8,19 +8,30 @@ const EventPage = () => {
 
 export default EventPage;
 
-export async function getStaticPaths() {
-  const res = await fetch(`${API_URL}/api/events/`);
-  const events = await res.json();
-  // console.log(events[0]);
+export async function getStaticProps({ params: { slug } }) {
+  const res = await fetch(`${API_URL}/events${slug}`);
+  const events = await res.text();
+  console.log({ url: `${API_URL}/events${slug}` });
 
-  const paths = events.map((evt) => ({ params: { slug: evt.slug } }));
-  return { paths, fallback: true };
+  return {
+    props: {
+      evt: events[0],
+    },
+    revalidate: 1,
+  };
 }
 
-export async function getStaticProps({ query }) {
-  console.log({ query });
+export async function getStaticPaths() {
+  const res = await fetch(`${API_URL}/api/events`);
 
-  const res = await fetch(`${API_URL}/api/events/burgett`);
   const events = await res.json();
-  return { props: { evt: events[0] }, revalidate: 1 };
+
+  const paths = events.map((evt) => ({
+    params: { slug: evt.slug.toString() },
+  }));
+
+  return {
+    paths,
+    fallback: false,
+  };
 }

@@ -2,16 +2,18 @@ import React from "react";
 import Layout from "@/components/Layout";
 import { API_URL } from "@/config/index";
 
-const EventPage = () => {
+const EventPage = (props) => {
+  console.log(props);
+
   return <Layout>EventPage</Layout>;
 };
 
 export default EventPage;
 
 export async function getStaticProps({ params: { slug } }) {
-  const res = await fetch(`${API_URL}/events${slug}`);
-  const events = await res.text();
-  console.log({ url: `${API_URL}/events${slug}` });
+  const res = await fetch(`${API_URL}/api/events?slug=${slug}`);
+  const events = await res.json();
+  console.log({ url: events });
 
   return {
     props: {
@@ -22,13 +24,14 @@ export async function getStaticProps({ params: { slug } }) {
 }
 
 export async function getStaticPaths() {
-  const res = await fetch(`${API_URL}/api/events`);
+  const res = await fetch(`${API_URL}/api/events/`);
 
   const events = await res.json();
 
   const paths = events.map((evt) => ({
     params: { slug: evt.slug.toString() },
   }));
+  console.log(paths);
 
   return {
     paths,

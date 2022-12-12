@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 const EventItem = ({ evt }) => {
+  console.log({ evt });
   return (
     <div className={styles.event}>
       <div className={styles.image}>
@@ -18,7 +19,7 @@ const EventItem = ({ evt }) => {
         <h3>{evt.name}</h3>
       </div>
       <div className={styles.link}>
-        <Link href={`/events/${evt.slug.toLowerCase()}`}>
+        <Link href={`/events/${evt.attributes.slug}`}>
           <span className="btn">Details</span>
         </Link>
       </div>

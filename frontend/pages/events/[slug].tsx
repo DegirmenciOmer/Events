@@ -26,10 +26,7 @@ export type TEvt = {
 };
 
 const EventPage: FC<TEvtProps> = ({ evt }) => {
-  console.log({ evt });
-  const deleteEvent = (e: any) => {
-    console.log({ evt });
-  };
+  const deleteEvent = (e: any) => {};
   return (
     <Layout>
       <div className={styles.event}>
@@ -77,8 +74,6 @@ export async function getStaticProps({ params: { slug } }) {
     `${API_URL}/api/events?filters[slug][$eq]=${slug}&populate=*`
   );
   const { data: evt } = await res.json();
-  console.log(`${API_URL}/api/events?slug=${slug}`);
-  console.log(evt);
 
   return {
     props: {

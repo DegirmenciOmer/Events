@@ -20,18 +20,20 @@ export type TEvt = {
     time: string;
     venue: string;
     description: string;
-    image: string;
+    image: any;
     performers: string;
   };
 };
 
-const EventPage: FC<TEvtProps> = ({ evt }) => {
+const EventPage: FC<TEvtProps> = ({ evt: { id, attributes: evt } }) => {
   const deleteEvent = (e: any) => {};
+  const date = new Date(evt.date).toLocaleDateString("nl-NL");
+
   return (
     <Layout>
       <div className={styles.event}>
         <div className={styles.controls}>
-          <Link href={`/events/edit/${evt.id}`}>
+          <Link href={`/events/edit/${id}`}>
             <span>
               <FaPencilAlt /> Edit Event
             </span>
@@ -41,24 +43,24 @@ const EventPage: FC<TEvtProps> = ({ evt }) => {
           </div>
         </div>
         <span>
-          {evt?.attributes?.date} at {evt?.attributes?.time}
+          {date} at {evt?.time}
         </span>
-        <h1>{evt?.attributes?.name}</h1>
-        {evt?.attributes?.image && (
+        <h1>{evt?.name}</h1>
+        {evt?.image && (
           <div className={styles.image}>
             <Image
-              src={evt?.attributes?.image.data.attributes.formats.medium.url}
+              src={evt?.image.data.attributes.formats.medium.url}
               width={960}
               height={600}
             />
           </div>
         )}
         <h3>Performers:</h3>
-        <p>{evt?.attributes?.performers}</p>
+        <p>{evt?.performers}</p>
         <h3>Description:</h3>
-        <p>{evt?.attributes?.description}</p>
-        <h3>Venue: {evt?.attributes?.venue}</h3>
-        <p>{evt?.attributes?.address}</p>
+        <p>{evt?.description}</p>
+        <h3>Venue: {evt?.venue}</h3>
+        <p>{evt?.address}</p>
         <Link href="/events">
           <a className={styles.back}>{"<"} Go Back</a>
         </Link>

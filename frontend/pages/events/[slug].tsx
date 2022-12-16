@@ -12,26 +12,28 @@ interface TEvtProps {
 
 export type TEvt = {
   id: number;
-  address: string;
-  name: string;
-  slug: string;
-  date: string;
-  time: string;
-  venue: string;
-  description: string;
-  image: string;
-  performers: string;
+  attributes: {
+    address: string;
+    name: string;
+    slug: string;
+    date: string;
+    time: string;
+    venue: string;
+    description: string;
+    image: any;
+    performers: string;
+  };
 };
 
-const EventPage: FC<TEvtProps> = ({ evt }) => {
-  const deleteEvent = (e: any) => {
-    console.log("delete");
-  };
+const EventPage: FC<TEvtProps> = ({ evt: { id, attributes: evt } }) => {
+  const deleteEvent = (e: any) => {};
+  const date = new Date(evt.date).toLocaleDateString("nl-NL");
+
   return (
     <Layout>
       <div className={styles.event}>
         <div className={styles.controls}>
-          <Link href={`/events/edit/${evt.id.toString()}`}>
+          <Link href={`/events/edit/${id}`}>
             <span>
               <FaPencilAlt /> Edit Event
             </span>
@@ -41,21 +43,25 @@ const EventPage: FC<TEvtProps> = ({ evt }) => {
           </div>
         </div>
         <span>
-          {evt.date} at {evt.time}
+          {date} at {evt?.time}
         </span>
-        <h1>{evt.name}</h1>
-        {evt.image && (
+        <h1>{evt?.name}</h1>
+        {evt?.image && (
           <div className={styles.image}>
-            <Image src={evt.image} width={960} height={600} />
+            <Image
+              src={evt?.image.data.attributes.formats.medium.url}
+              width={960}
+              height={600}
+            />
           </div>
         )}
         <h3>Performers:</h3>
-        <p>{evt.performers}</p>
+        <p>{evt?.performers}</p>
         <h3>Description:</h3>
-        <p>{evt.description}</p>
-        <h3>Venue: {evt.venue}</h3>
-        <p>{evt.address}</p>
-        <Link href="/events">
+        <p>{evt?.description}</p>
+        <h3>Venue: {evt?.venue}</h3>
+        <p>{evt?.address}</p>
+        <Link href="/">
           <a className={styles.back}>{"<"} Go Back</a>
         </Link>
       </div>
@@ -66,12 +72,14 @@ const EventPage: FC<TEvtProps> = ({ evt }) => {
 export default EventPage;
 
 export async function getStaticProps({ params: { slug } }) {
-  const res = await fetch(`${API_URL}/api/events?slug=${slug}`);
-  const events = await res.json();
+  const res = await fetch(
+    `${API_URL}/api/events?filters[slug][$eq]=${slug}&populate=*`
+  );
+  const { data: evt } = await res.json();
 
   return {
     props: {
-      evt: events[0],
+      evt: evt[0],
     },
     revalidate: 1,
   };
@@ -80,10 +88,10 @@ export async function getStaticProps({ params: { slug } }) {
 export async function getStaticPaths() {
   const res = await fetch(`${API_URL}/api/events/`);
 
-  const events = await res.json();
+  const { data: events } = await res.json();
 
   const paths = events.map((evt: TEvt) => ({
-    params: { slug: evt.slug.toString() },
+    params: { slug: evt.attributes.slug },
   }));
 
   return {

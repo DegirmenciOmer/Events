@@ -1,6 +1,5 @@
 import Layout from "../components/Layout";
 import EventItem from "../components/EventItem";
-import styles from "../styles/Home.module.css";
 import { API_URL } from "@/config/index";
 
 import React from "react";
@@ -13,10 +12,10 @@ const Home = ({ events }) => {
       {events.length === 0 ? (
         <h3>No events found</h3>
       ) : (
-        events.map((evt) => <EventItem evt={evt} key={evt.id} />)
+        events.map((evt) => <EventItem evt={evt.attributes} key={evt.id} />)
       )}
       {events.length > 0 && (
-        <Link href="/events">
+        <Link href="api/events">
           <span className="btn-secondary"> View All Events</span>
         </Link>
       )}
@@ -25,8 +24,11 @@ const Home = ({ events }) => {
 };
 
 export async function getStaticProps() {
-  const res = await fetch(`${API_URL}/api/events`);
-  const events = await res.json();
+  const res = await fetch(
+    `${API_URL}/api/events?[populate]=*&_sort[0]=date:desc`
+  );
+
+  const { data: events } = await res.json();
   return { props: { events } };
 }
 

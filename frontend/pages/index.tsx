@@ -1,6 +1,5 @@
 import Layout from "../components/Layout";
 import EventItem from "../components/EventItem";
-import styles from "../styles/Home.module.css";
 import { API_URL } from "@/config/index";
 
 import React from "react";

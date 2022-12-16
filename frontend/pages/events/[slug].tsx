@@ -61,7 +61,7 @@ const EventPage: FC<TEvtProps> = ({ evt: { id, attributes: evt } }) => {
         <p>{evt?.description}</p>
         <h3>Venue: {evt?.venue}</h3>
         <p>{evt?.address}</p>
-        <Link href="/events">
+        <Link href="/">
           <a className={styles.back}>{"<"} Go Back</a>
         </Link>
       </div>

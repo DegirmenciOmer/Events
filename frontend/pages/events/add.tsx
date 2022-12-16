@@ -17,6 +17,7 @@ const AddEventPage = () => {
     date: "",
     time: "",
     description: "",
+    slug: "",
   });
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -29,21 +30,21 @@ const AddEventPage = () => {
       toast.error("Please fill in all fields");
     }
     // Post data
-    const res = await fetch(`${API_URL}/events`, {
+    const data = { data: { ...values } };
+    const res = await fetch(`${API_URL}/api/events`, {
       method: "POST",
       headers: {
-        "Content-Type": "Application/json",
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(values),
+      body: JSON.stringify(data),
     });
 
     if (!res.ok) {
       toast.error("Something went wrong");
     } else {
       const evt = await res.json();
-      console.log({ newEvent: evt });
 
-      //router.push(`/events/${evt.slug}`);
+      if (evt) router.push(`/events/${evt.data.attributes.slug}`);
     }
   };
 
@@ -51,7 +52,12 @@ const AddEventPage = () => {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { value, name } = e.target;
-    setValues({ ...values, [name]: value });
+
+    setValues({
+      ...values,
+      [name]: value,
+      slug: values.name.toLowerCase().split(" ").join("-"),
+    });
   };
   return (
     <Layout>
@@ -105,7 +111,7 @@ const AddEventPage = () => {
           <div>
             <label htmlFor="date">Date</label>
             <input
-              type="text"
+              type="date"
               id="date"
               name="date"
               value={values.date}

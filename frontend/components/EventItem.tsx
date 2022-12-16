@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 const EventItem = ({ evt }) => {
-  console.log(evt);
   const date = new Date(evt.date).toLocaleDateString("nl-NL");
 
   return (

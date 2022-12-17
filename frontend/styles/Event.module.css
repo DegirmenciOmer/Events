@@ -18,12 +18,12 @@
 .controls {
   display: flex;
   justify-content: flex-end;
+  cursor: pointer;
 }
 
 .delete {
   margin-left: 20px;
   color: red;
-  cursor: pointer;
 }
 
 .back {

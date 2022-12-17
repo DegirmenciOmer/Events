@@ -49,6 +49,9 @@ const EventPage: FC<TEvtProps> = ({ evt: { id, attributes: evt } }) => {
   return (
     <Layout>
       <div className={styles.event}>
+        <Link href="/">
+          <a className={styles.back}>{"<"} Go Back</a>
+        </Link>
         <div className={styles.controls}>
           <Link href={`/events/edit/${id}`}>
             <span>
@@ -77,11 +80,10 @@ const EventPage: FC<TEvtProps> = ({ evt: { id, attributes: evt } }) => {
         <p>{evt?.performers}</p>
         <h3>Description:</h3>
         <p>{evt?.description}</p>
-        <h3>Venue: {evt?.venue}</h3>
-        <p>{evt?.address}</p>
-        <Link href="/">
-          <a className={styles.back}>{"<"} Go Back</a>
-        </Link>
+        <h3>Venue: </h3>
+        <p>
+          {evt?.address}, {evt?.venue}
+        </p>
       </div>
     </Layout>
   );

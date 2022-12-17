@@ -5,6 +5,8 @@ import styles from "@/styles/Event.module.css";
 import Link from "next/link";
 import { FaPencilAlt, FaTimes } from "react-icons/fa";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { ToastContainer, toast } from "react-toastify";
 
 interface TEvtProps {
   evt: TEvt;
@@ -26,7 +28,23 @@ export type TEvt = {
 };
 
 const EventPage: FC<TEvtProps> = ({ evt: { id, attributes: evt } }) => {
-  const deleteEvent = (e: any) => {};
+  const router = useRouter();
+
+  const deleteEvent = async (e: any) => {
+    if (confirm("Are you sure?")) {
+      const res = await fetch(`${API_URL}/api/events/${id}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.message);
+      } else {
+        router.push(`/events`);
+      }
+    }
+  };
   const date = new Date(evt.date).toLocaleDateString("nl-NL");
   return (
     <Layout>
@@ -45,6 +63,7 @@ const EventPage: FC<TEvtProps> = ({ evt: { id, attributes: evt } }) => {
           {date} at {evt?.time}
         </span>
         <h1>{evt?.name}</h1>
+        <ToastContainer />
         {evt?.image && (
           <div className={styles.image}>
             <Image

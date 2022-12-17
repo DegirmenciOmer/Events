@@ -11,7 +11,7 @@ const EventItem = ({ evt }) => {
       <div className={styles.image}>
         <Image
           src={
-            evt.image.data.attributes.formats.medium.url ??
+            evt?.image?.data?.attributes?.formats?.medium.url ??
             "/images/event-default.png"
           }
           width={170}

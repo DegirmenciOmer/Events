@@ -6,10 +6,14 @@ import Link from "next/link";
 import { API_URL } from "@/config/index";
 import { useRouter } from "next/router";
 import { formatDateForInput } from "util/formatDate";
+import { FaImage } from "react-icons/fa";
+import Image from "next/image";
 
-useRouter;
 const EditEventPage = ({ evt: { id, attributes: evt } }) => {
   const router = useRouter();
+  const [imagePreview, setImagePreview] = useState(
+    evt.image ? evt?.image?.data?.attributes?.formats?.thumbnail?.url : null
+  );
   const [values, setValues] = useState({
     name: evt.name,
     performers: evt.performers,
@@ -65,7 +69,7 @@ const EditEventPage = ({ evt: { id, attributes: evt } }) => {
       <Link href="/">
         <a className={styles.back}>{"<"} Go Back</a>
       </Link>
-      <h1>Add Event</h1>
+      <h1>Update Event</h1>
       <ToastContainer />
       <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.grid}>
@@ -139,8 +143,23 @@ const EditEventPage = ({ evt: { id, attributes: evt } }) => {
             onChange={handleInputChange}
           />
         </div>
-        <input className="btn" type="submit" value="Add Event" />
+        <input className="btn" type="submit" value="Update Event" />
       </form>
+
+      <h1>Event Image</h1>
+      {imagePreview ? (
+        <Image width={100} height={70} src={imagePreview} />
+      ) : (
+        <div>
+          <p>No image uploaded</p>
+        </div>
+      )}
+      <div>
+        <button className="btn-secondary">
+          <FaImage />
+          Set Image
+        </button>
+      </div>
     </Layout>
   );
 };

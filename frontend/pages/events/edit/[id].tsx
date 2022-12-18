@@ -8,12 +8,14 @@ import { useRouter } from "next/router";
 import { formatDateForInput } from "util/formatDate";
 import { FaImage } from "react-icons/fa";
 import Image from "next/image";
+import Modal from "@/components/Modal";
 
 const EditEventPage = ({ evt: { id, attributes: evt } }) => {
   const router = useRouter();
   const [imagePreview, setImagePreview] = useState(
     evt.image ? evt?.image?.data?.attributes?.formats?.thumbnail?.url : null
   );
+  const [showModal, setShowModal] = useState(false);
   const [values, setValues] = useState({
     name: evt.name,
     performers: evt.performers,
@@ -155,11 +157,18 @@ const EditEventPage = ({ evt: { id, attributes: evt } }) => {
         </div>
       )}
       <div>
-        <button className="btn-secondary">
+        <button onClick={() => setShowModal(true)} className="btn-secondary">
           <FaImage />
           Set Image
         </button>
       </div>
+      <Modal
+        title="Upload Image"
+        onClose={() => setShowModal(false)}
+        show={showModal}
+      >
+        Image Upload
+      </Modal>
     </Layout>
   );
 };

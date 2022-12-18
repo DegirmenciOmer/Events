@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 const EventItem = ({ evt }) => {
-  console.log(evt);
   const date = new Date(evt.date).toLocaleDateString("nl-NL");
 
   return (
@@ -12,7 +11,7 @@ const EventItem = ({ evt }) => {
       <div className={styles.image}>
         <Image
           src={
-            evt.image.data.attributes.formats.medium.url ??
+            evt?.image?.data?.attributes?.formats?.medium.url ??
             "/images/event-default.png"
           }
           width={170}

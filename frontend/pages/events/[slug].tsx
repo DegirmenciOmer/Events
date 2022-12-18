@@ -5,6 +5,8 @@ import styles from "@/styles/Event.module.css";
 import Link from "next/link";
 import { FaPencilAlt, FaTimes } from "react-icons/fa";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { ToastContainer, toast } from "react-toastify";
 
 interface TEvtProps {
   evt: TEvt;
@@ -26,12 +28,30 @@ export type TEvt = {
 };
 
 const EventPage: FC<TEvtProps> = ({ evt: { id, attributes: evt } }) => {
-  const deleteEvent = (e: any) => {};
-  const date = new Date(evt.date).toLocaleDateString("nl-NL");
+  const router = useRouter();
 
+  const deleteEvent = async (e: any) => {
+    if (confirm("Are you sure?")) {
+      const res = await fetch(`${API_URL}/api/events/${id}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.message);
+      } else {
+        router.push(`/events`);
+      }
+    }
+  };
+  const date = new Date(evt.date).toLocaleDateString("nl-NL");
   return (
     <Layout>
       <div className={styles.event}>
+        <Link href="/">
+          <a className={styles.back}>{"<"} Go Back</a>
+        </Link>
         <div className={styles.controls}>
           <Link href={`/events/edit/${id}`}>
             <span>
@@ -46,10 +66,11 @@ const EventPage: FC<TEvtProps> = ({ evt: { id, attributes: evt } }) => {
           {date} at {evt?.time}
         </span>
         <h1>{evt?.name}</h1>
+        <ToastContainer />
         {evt?.image && (
           <div className={styles.image}>
             <Image
-              src={evt?.image.data.attributes.formats.medium.url}
+              src={evt?.image?.data?.attributes?.formats?.medium.url}
               width={960}
               height={600}
             />
@@ -59,11 +80,10 @@ const EventPage: FC<TEvtProps> = ({ evt: { id, attributes: evt } }) => {
         <p>{evt?.performers}</p>
         <h3>Description:</h3>
         <p>{evt?.description}</p>
-        <h3>Venue: {evt?.venue}</h3>
-        <p>{evt?.address}</p>
-        <Link href="/">
-          <a className={styles.back}>{"<"} Go Back</a>
-        </Link>
+        <h3>Venue: </h3>
+        <p>
+          {evt?.address}, {evt?.venue}
+        </p>
       </div>
     </Layout>
   );

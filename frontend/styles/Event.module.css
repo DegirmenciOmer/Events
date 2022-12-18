@@ -18,6 +18,7 @@
 .controls {
   display: flex;
   justify-content: flex-end;
+  cursor: pointer;
 }
 
 .delete {

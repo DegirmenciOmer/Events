@@ -7,7 +7,7 @@ const Search = () => {
   const [term, setTerm] = useState("");
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    router.push(`events/search?term=${term}`);
+    router.push(`/events/search?term=${term}`);
     setTerm("");
   };
   return (

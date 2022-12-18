@@ -5,19 +5,26 @@ import Layout from "@/components/Layout";
 import Link from "next/link";
 import { API_URL } from "@/config/index";
 import { useRouter } from "next/router";
+import { formatDateForInput } from "util/formatDate";
+import { FaImage } from "react-icons/fa";
+import Image from "next/image";
+import Modal from "@/components/Modal";
 
-useRouter;
-const AddEventPage = () => {
+const EditEventPage = ({ evt: { id, attributes: evt } }) => {
   const router = useRouter();
+  const [imagePreview, setImagePreview] = useState(
+    evt.image ? evt?.image?.data?.attributes?.formats?.thumbnail?.url : null
+  );
+  const [showModal, setShowModal] = useState(false);
   const [values, setValues] = useState({
-    name: "",
-    performers: "",
-    venue: "",
-    address: "",
-    date: "",
-    time: "",
-    description: "",
-    slug: "",
+    name: evt.name,
+    performers: evt.performers,
+    venue: evt.venue,
+    address: evt.address,
+    date: formatDateForInput(evt.date),
+    time: evt.time,
+    description: evt.description,
+    slug: evt.slug,
   });
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -31,8 +38,8 @@ const AddEventPage = () => {
     }
     // Post data
     const data = { data: { ...values } };
-    const res = await fetch(`${API_URL}/api/events`, {
-      method: "POST",
+    const res = await fetch(`${API_URL}/api/events/${id}`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
@@ -64,7 +71,7 @@ const AddEventPage = () => {
       <Link href="/">
         <a className={styles.back}>{"<"} Go Back</a>
       </Link>
-      <h1>Add Event</h1>
+      <h1>Update Event</h1>
       <ToastContainer />
       <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.grid}>
@@ -138,10 +145,45 @@ const AddEventPage = () => {
             onChange={handleInputChange}
           />
         </div>
-        <input className="btn" type="submit" value="Add Event" />
+        <input className="btn" type="submit" value="Update Event" />
       </form>
+
+      <h1>Event Image</h1>
+      {imagePreview ? (
+        <Image width={100} height={70} src={imagePreview} />
+      ) : (
+        <div>
+          <p>No image uploaded</p>
+        </div>
+      )}
+      <div>
+        <button onClick={() => setShowModal(true)} className="btn-secondary">
+          <FaImage />
+          Set Image
+        </button>
+      </div>
+      <Modal
+        title="Upload Image"
+        onClose={() => setShowModal(false)}
+        show={showModal}
+      >
+        Image Upload
+      </Modal>
     </Layout>
   );
 };
 
-export default AddEventPage;
+export default EditEventPage;
+
+export async function getServerSideProps({ params: { id } }) {
+  const res = await fetch(
+    `${API_URL}/api/events?filters[id][$eq]=${id}&populate=*`
+  );
+  const { data } = await res.json();
+
+  return {
+    props: {
+      evt: data[0],
+    },
+  };
+}

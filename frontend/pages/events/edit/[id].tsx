@@ -9,8 +9,9 @@ import { formatDateForInput } from "util/formatDate";
 import { FaImage } from "react-icons/fa";
 import Image from "next/image";
 import Modal from "@/components/Modal";
+import ImageUpload from "@/components/ImageUpload";
 
-const EditEventPage = ({ evt: { id, attributes: evt } }) => {
+const EditEventPage = ({ evt: { id: evtId, attributes: evt } }) => {
   const router = useRouter();
   const [imagePreview, setImagePreview] = useState(
     evt.image ? evt?.image?.data?.attributes?.formats?.thumbnail?.url : null
@@ -38,7 +39,7 @@ const EditEventPage = ({ evt: { id, attributes: evt } }) => {
     }
     // Post data
     const data = { data: { ...values } };
-    const res = await fetch(`${API_URL}/api/events/${id}`, {
+    const res = await fetch(`${API_URL}/api/events/${evtId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -65,6 +66,19 @@ const EditEventPage = ({ evt: { id, attributes: evt } }) => {
       [name]: value,
       slug: values.name.toLowerCase().split(" ").join("-"),
     });
+  };
+
+  const imageUploaded = async () => {
+    const res = await fetch(
+      `${API_URL}/api/events?filters[id][$eq]=${evtId}&populate=*`
+    );
+
+    const { data } = await res.json();
+
+    setImagePreview(
+      data[0]?.attributes?.image?.data?.attributes?.formats?.thumbnail?.url
+    );
+    setShowModal(false);
   };
   return (
     <Layout>
@@ -167,7 +181,7 @@ const EditEventPage = ({ evt: { id, attributes: evt } }) => {
         onClose={() => setShowModal(false)}
         show={showModal}
       >
-        Image Upload
+        <ImageUpload imageUploaded={imageUploaded} evtId={evtId} />
       </Modal>
     </Layout>
   );

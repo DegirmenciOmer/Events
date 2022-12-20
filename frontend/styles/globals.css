@@ -68,3 +68,8 @@ h1 {
 .btn-icon svg {
   margin-right: 5px;
 }
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+}

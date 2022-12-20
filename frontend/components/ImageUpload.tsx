@@ -1,9 +1,13 @@
 import styles from "../styles/Form.module.css";
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import { API_URL } from "../config";
 import { toast } from "react-toastify";
 
-const ImageUpload = ({ evtId, imageUploaded }) => {
+interface TImageUploadProps {
+  evtId: string;
+  imageUploaded: () => void;
+}
+const ImageUpload: FC<TImageUploadProps> = ({ evtId, imageUploaded }) => {
   const [image, setImage] = useState();
   const handleSubmit = async (e) => {
     e.preventDefault();

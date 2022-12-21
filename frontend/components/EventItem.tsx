@@ -1,9 +1,14 @@
 import styles from "../styles/EventItem.module.css";
-import React from "react";
+import React, { FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { TEvt } from "pages/events/[slug]";
 
-const EventItem = ({ evt }) => {
+interface TEventItemProps {
+  evt: TEvt["attributes"];
+}
+
+const EventItem: FC<TEventItemProps> = ({ evt }) => {
   const date = new Date(evt.date).toLocaleDateString("nl-NL");
 
   return (

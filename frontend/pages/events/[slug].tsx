@@ -27,6 +27,8 @@ export type TEvt = {
   };
 };
 
+export type TEvents = { events: TEvt[] };
+
 const EventPage: FC<TEvtProps> = ({ evt: { id, attributes: evt } }) => {
   const router = useRouter();
 

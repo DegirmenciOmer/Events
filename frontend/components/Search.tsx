@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
 import styles from "../styles/Search.module.css";
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import React, { ChangeEvent, FormEvent, useState, FC } from "react";
 
-const Search = () => {
+const Search: FC = () => {
   const router = useRouter();
   const [term, setTerm] = useState("");
   const handleSubmit = (e: FormEvent) => {

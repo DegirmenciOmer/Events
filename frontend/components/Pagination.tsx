@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import { PER_PAGE } from "util/utils";
 import Link from "next/link";
+
 interface TPaginationProps {
   total: number;
   page: number;

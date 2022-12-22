@@ -8,7 +8,7 @@ import React, {
 import { NEXT_URL } from "../config";
 
 interface TAuthContextProps {
-  user?: any | null;
+  user?: Tuser | null;
   error: any | null;
   register: (user: Tuser) => void;
   logout: (user: Tuser) => void;
@@ -16,7 +16,11 @@ interface TAuthContextProps {
   login: (loginInfo: TloginInfo) => void;
 }
 
-type Tuser = any;
+type Tuser = {
+  username: string;
+  email: string;
+  password: string;
+};
 
 type Props = {
   children: React.ReactNode;
@@ -48,8 +52,22 @@ const AuthProvider = ({ children }: Props) => {
   const [error, setError] = useState(null);
 
   // Register User
-  const register = async ({ email, password }: Tlogin) => {
-    setUser({ email, password });
+  const register = async (user: Tuser) => {
+    setError(null);
+    const res = await fetch(`${NEXT_URL}/api/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    });
+    const data = await res.json();
+    //
+    if (res.ok) {
+      setUser(data.user);
+    } else {
+      setError(data.message);
+    }
   };
 
   // Login User

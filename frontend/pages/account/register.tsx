@@ -20,7 +20,7 @@ const RegisterPage: FC = () => {
       toast.error("Passwords do not match!");
       return;
     } else {
-      register({ email, password });
+      register({ username, email, password });
     }
   };
   return (

@@ -1,21 +1,26 @@
 import Layout from "@/components/Layout";
+import { useAuth } from "@/context/AuthContext";
 import styles from "@/styles/AuthForm.module.css";
 import Link from "next/link";
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import React, { useState, ChangeEvent, FormEvent, FC } from "react";
 import { FaUser } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 
-const RegisterPage = () => {
+const RegisterPage: FC = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+
+  const { register, error } = useAuth();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (password !== passwordConfirm) {
       toast.error("Passwords do not match!");
       return;
+    } else {
+      register({ email, password });
     }
   };
   return (
@@ -33,7 +38,7 @@ const RegisterPage = () => {
               id="username"
               value={username}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setEmail(e.target.value)
+                setUsername(e.target.value)
               }
             />
           </div>

@@ -6,7 +6,9 @@ import Search from "./Search";
 import { useAuth } from "@/context/AuthContext";
 
 const Header = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+
+  const handleLogout = () => logout();
 
   return (
     <header className={styles.header}>
@@ -31,12 +33,10 @@ const Header = () => {
           )}
           <li>
             {user ? (
-              <Link href={`/account/logout`}>
-                <span className="btn-secondary btn-icon">
-                  <FaSignOutAlt />
-                  Logout
-                </span>
-              </Link>
+              <span onClick={handleLogout} className="btn-secondary btn-icon">
+                <FaSignOutAlt />
+                Logout
+              </span>
             ) : (
               <Link href={`/account/login`}>
                 <span className="btn-secondary btn-icon">

@@ -1,19 +1,12 @@
 import { useRouter } from "next/router";
-import React, {
-  Children,
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  useEffect,
-} from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { NEXT_URL } from "../config";
 
 interface TAuthContextProps {
   user?: Tuser | null;
   error: any | null;
   register: (user: Tuser) => void;
-  logout: (user: Tuser) => void;
+  logout: () => void;
   checkUserLoggedIn: (user: Tuser) => void;
   login: (loginInfo: TloginInfo) => void;
 }
@@ -99,8 +92,14 @@ const AuthProvider = ({ children }: Props) => {
   };
 
   // Logout User
-  const logout = async (user: Tuser) => {
-    console.log("logout");
+  const logout = async () => {
+    const res = await fetch(`${NEXT_URL}/api/logout`, {
+      method: "POST",
+    });
+    if (res.ok) {
+      setUser(null);
+      router.push("/");
+    }
   };
 
   // Check if the user is logged in or  not

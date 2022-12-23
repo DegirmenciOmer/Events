@@ -12,6 +12,7 @@ const RegisterPage: FC = () => {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
 
+  //TODO: Add error handling
   const { register, error } = useAuth();
 
   const handleSubmit = (e: FormEvent) => {

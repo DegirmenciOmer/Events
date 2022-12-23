@@ -15,8 +15,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     const data = await strapiRes.json();
 
-    console.log(data);
-
     if (strapiRes.ok) {
       res.status(200).json({ user: data.user });
     } else {

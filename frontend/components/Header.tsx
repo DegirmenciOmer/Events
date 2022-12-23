@@ -19,25 +19,32 @@ const Header = () => {
           <li>
             <Link href={"/events"}>New Events</Link>
           </li>
-          {user ? (
+          {user && (
             <>
               <li>
                 <Link href={"/events/add"}>Add Event</Link>
               </li>
               <li>
-                <Link href={"/events/dashboard"}>Dashboard</Link>
+                <Link href={"/account/dashboard"}>Dashboard</Link>
               </li>
             </>
-          ) : (
-            <></>
           )}
           <li>
-            <Link href={"/account/login"}>
-              <span className="btn-secondary btn-icon">
-                <FaSignInAlt />
-                Login
-              </span>
-            </Link>
+            {user ? (
+              <Link href={`/account/logout`}>
+                <span className="btn-secondary btn-icon">
+                  <FaSignOutAlt />
+                  Logout
+                </span>
+              </Link>
+            ) : (
+              <Link href={`/account/login`}>
+                <span className="btn-secondary btn-icon">
+                  <FaSignInAlt />
+                  Login
+                </span>
+              </Link>
+            )}
           </li>
         </ul>
       </nav>

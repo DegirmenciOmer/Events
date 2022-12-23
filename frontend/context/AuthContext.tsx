@@ -1,9 +1,11 @@
+import { useRouter } from "next/router";
 import React, {
   Children,
   createContext,
   useContext,
   useState,
   ReactNode,
+  useEffect,
 } from "react";
 import { NEXT_URL } from "../config";
 
@@ -51,6 +53,12 @@ const AuthProvider = ({ children }: Props) => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
 
+  const router = useRouter();
+
+  useEffect(() => {
+    checkUserLoggedIn();
+  }, []);
+
   // Register User
   const register = async (user: Tuser) => {
     setError(null);
@@ -84,6 +92,7 @@ const AuthProvider = ({ children }: Props) => {
     //
     if (res.ok) {
       setUser(data.user);
+      router.push("/account/dashboard");
     } else {
       setError(data.message);
     }
@@ -95,8 +104,16 @@ const AuthProvider = ({ children }: Props) => {
   };
 
   // Check if the user is logged in or  not
-  const checkUserLoggedIn = async (user: Tuser) => {
-    console.log("checkUserLoggedIn");
+  const checkUserLoggedIn = async () => {
+    setError(null);
+    const res = await fetch(`${NEXT_URL}/api/user`);
+    const data = await res.json();
+    //
+    if (res.ok) {
+      setUser(data.user);
+    } else {
+      setUser(null);
+    }
   };
 
   return (

@@ -2,6 +2,7 @@ import Layout from "@/components/Layout";
 import { useAuth } from "@/context/AuthContext";
 import styles from "@/styles/AuthForm.module.css";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { FaUser } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
@@ -10,11 +11,15 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { login, error } = useAuth();
+  const router = useRouter();
+
+  const { login, error, user } = useAuth();
 
   useEffect(() => {
+    if (user) router.push("/");
+
     if (error) toast.error(error);
-  }, [error]);
+  }, [error, user]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();

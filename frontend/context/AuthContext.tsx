@@ -63,9 +63,9 @@ const AuthProvider = ({ children }: Props) => {
       body: JSON.stringify(user),
     });
     const data = await res.json();
-    //
     if (res.ok) {
       setUser(data.user);
+      router.push("/account/dashboard");
     } else {
       setError(data.message);
     }
@@ -82,7 +82,6 @@ const AuthProvider = ({ children }: Props) => {
       body: JSON.stringify({ identifier, password }),
     });
     const data = await res.json();
-    //
     if (res.ok) {
       setUser(data.user);
       router.push("/account/dashboard");

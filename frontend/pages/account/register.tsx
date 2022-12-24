@@ -2,7 +2,8 @@ import Layout from "@/components/Layout";
 import { useAuth } from "@/context/AuthContext";
 import styles from "@/styles/AuthForm.module.css";
 import Link from "next/link";
-import React, { useState, ChangeEvent, FormEvent, FC } from "react";
+import { useRouter } from "next/router";
+import React, { useEffect, useState, ChangeEvent, FormEvent, FC } from "react";
 import { FaUser } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 
@@ -12,8 +13,17 @@ const RegisterPage: FC = () => {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
 
-  //TODO: Add error handling
-  const { register, error } = useAuth();
+  const router = useRouter();
+
+  const { register, error, user } = useAuth();
+
+  useEffect(() => {
+    if (user) router.push("/");
+
+    if (error) {
+      toast.error(error);
+    }
+  }, [error, user]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -76,7 +86,7 @@ const RegisterPage: FC = () => {
               }
             />
           </div>
-          <input type="submit" value="Login" className="btn" />
+          <input type="submit" value="Register" className="btn" />
           <p>
             Already have an account? <Link href="/account/login">Login</Link>
           </p>

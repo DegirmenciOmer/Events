@@ -1,10 +1,15 @@
 import Link from "next/link";
 import React from "react";
-import styles from "../styles/Header.module.css";
+import styles from "@/styles/Header.module.css";
 import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
 import Search from "./Search";
+import { useAuth } from "@/context/AuthContext";
 
 const Header = () => {
+  const { user, logout } = useAuth();
+
+  const handleLogout = () => logout();
+
   return (
     <header className={styles.header}>
       <div className={styles.logo}>
@@ -16,16 +21,30 @@ const Header = () => {
           <li>
             <Link href={"/events"}>New Events</Link>
           </li>
+          {user && (
+            <>
+              <li>
+                <Link href={"/events/add"}>Add Event</Link>
+              </li>
+              <li>
+                <Link href={"/account/dashboard"}>Dashboard</Link>
+              </li>
+            </>
+          )}
           <li>
-            <Link href={"/events/add"}>Add Event</Link>
-          </li>
-          <li>
-            <Link href={"/account/login"}>
-              <span className="btn-secondary btn-icon">
-                <FaSignInAlt />
-                Login
+            {user ? (
+              <span onClick={handleLogout} className="btn-secondary btn-icon">
+                <FaSignOutAlt />
+                Logout
               </span>
-            </Link>
+            ) : (
+              <Link href={`/account/login`}>
+                <span className="btn-secondary btn-icon">
+                  <FaSignInAlt />
+                  Login
+                </span>
+              </Link>
+            )}
           </li>
         </ul>
       </nav>

@@ -1,21 +1,37 @@
 import Layout from "@/components/Layout";
+import { useAuth } from "@/context/AuthContext";
 import styles from "@/styles/AuthForm.module.css";
 import Link from "next/link";
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import { useRouter } from "next/router";
+import React, { useEffect, useState, ChangeEvent, FormEvent, FC } from "react";
 import { FaUser } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 
-const RegisterPage = () => {
+const RegisterPage: FC = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+
+  const router = useRouter();
+
+  const { register, error, user } = useAuth();
+
+  useEffect(() => {
+    if (user) router.push("/");
+
+    if (error) {
+      toast.error(error);
+    }
+  }, [error, user]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (password !== passwordConfirm) {
       toast.error("Passwords do not match!");
       return;
+    } else {
+      register({ username, email, password });
     }
   };
   return (
@@ -33,7 +49,7 @@ const RegisterPage = () => {
               id="username"
               value={username}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setEmail(e.target.value)
+                setUsername(e.target.value)
               }
             />
           </div>
@@ -70,7 +86,7 @@ const RegisterPage = () => {
               }
             />
           </div>
-          <input type="submit" value="Login" className="btn" />
+          <input type="submit" value="Register" className="btn" />
           <p>
             Already have an account? <Link href="/account/login">Login</Link>
           </p>

@@ -1,16 +1,29 @@
 import Layout from "@/components/Layout";
+import { useAuth } from "@/context/AuthContext";
 import styles from "@/styles/AuthForm.module.css";
 import Link from "next/link";
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import { useRouter } from "next/router";
+import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { FaUser } from "react-icons/fa";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const router = useRouter();
+
+  const { login, error, user } = useAuth();
+
+  useEffect(() => {
+    if (user) router.push("/");
+
+    if (error) toast.error(error);
+  }, [error, user]);
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    login({ email, password });
   };
   return (
     <Layout title="User Login">

@@ -189,11 +189,13 @@ const EditEventPage = ({ evt: { id: evtId, attributes: evt } }) => {
 
 export default EditEventPage;
 
-export async function getServerSideProps({ params: { id } }) {
+export async function getServerSideProps({ params: { id }, req }) {
   const res = await fetch(
     `${API_URL}/api/events?filters[id][$eq]=${id}&populate=*`
   );
   const { data } = await res.json();
+
+  console.log(req.headers.cookie);
 
   return {
     props: {

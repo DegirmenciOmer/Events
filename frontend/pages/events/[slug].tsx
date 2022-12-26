@@ -15,6 +15,7 @@ interface TEvtProps {
 export type TEvt = {
   id: number;
   attributes: {
+    id?: number;
     address: string;
     name: string;
     slug: string;

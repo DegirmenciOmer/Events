@@ -13,7 +13,7 @@ const EventItem: FC<TEventItemProps> = ({ evt }) => {
 
   return (
     <div className={styles.event}>
-      <div className={styles.image}>
+      <div className={styles.img}>
         <Image
           src={
             evt?.image?.data?.attributes?.formats?.medium.url ??

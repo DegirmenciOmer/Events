@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import styles from "../styles/Header.module.css";
+import styles from "@/styles/Header.module.css";
 import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
 import Search from "./Search";
 import { useAuth } from "@/context/AuthContext";

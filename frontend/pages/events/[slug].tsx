@@ -9,26 +9,28 @@ import { useRouter } from "next/router";
 import { ToastContainer, toast } from "react-toastify";
 
 interface TEvtProps {
-  evt: TEvt;
+  evt: TEvtData;
 }
 
-export type TEvt = {
+export type TEvtData = {
   id: number;
-  attributes: {
-    id?: number;
-    address: string;
-    name: string;
-    slug: string;
-    date: string;
-    time: string;
-    venue: string;
-    description: string;
-    image: any;
-    performers: string;
-  };
+  attributes: Tevt;
 };
 
-export type TEvents = { events: TEvt[] };
+export type Tevt = {
+  id?: number;
+  address: string;
+  name: string;
+  slug: string;
+  date: string;
+  time: string;
+  venue: string;
+  description: string;
+  image: any;
+  performers: string;
+};
+
+export type TEvents = { events: TEvtData[] };
 
 const EventPage: FC<TEvtProps> = ({ evt: { id, attributes: evt } }) => {
   const router = useRouter();
@@ -113,7 +115,7 @@ export async function getStaticPaths() {
 
   const { data: events } = await res.json();
 
-  const paths = events.map((evt: TEvt) => ({
+  const paths = events.map((evt: TEvtData) => ({
     params: { slug: evt.attributes.slug },
   }));
 

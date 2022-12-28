@@ -2,11 +2,23 @@ import Layout from "@/components/Layout";
 import { API_URL } from "@/config/index";
 import { parseCookies } from "helpers";
 import styles from "@/styles/Dashboard.module.css";
-import React from "react";
+import React, { useEffect } from "react";
 import DashboardEvent from "@/components/DashboardEvent";
+import { useRouter } from "next/router";
+import { useAuth } from "@/context/AuthContext";
+import { toast } from "react-toastify";
+import { Tevt } from "pages/events/[slug]";
 
 const DashboardPage = ({ events }) => {
-  console.log(events);
+  const router = useRouter();
+  const { error, user } = useAuth();
+
+  useEffect(() => {
+    if (!user) router.push("/account/login");
+
+    if (error) toast.error(error);
+    return;
+  }, [error, user]);
 
   const deleteEvent = (id) => {
     console.log("delete", id);
@@ -17,9 +29,10 @@ const DashboardPage = ({ events }) => {
       <div className={styles.dash}>
         <h1>Dashboard</h1>
         <h3>My Events</h3>
-        {events.map((evt) => (
-          <DashboardEvent handleDelete={deleteEvent} evt={evt} key={evt.id} />
-        ))}
+        {events.length > 0 &&
+          events.map((evt: Tevt) => (
+            <DashboardEvent handleDelete={deleteEvent} evt={evt} key={evt.id} />
+          ))}
       </div>
     </Layout>
   );
@@ -34,6 +47,9 @@ export const getServerSideProps = async ({ req }) => {
     },
   });
   const events = await res.json();
+  console.log(token);
+  console.log(events);
+
   return {
     props: { events },
   };

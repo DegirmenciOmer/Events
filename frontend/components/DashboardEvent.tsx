@@ -1,11 +1,11 @@
 import styles from "../styles/DashboardEvent.module.css";
 import React, { FC, MouseEventHandler } from "react";
 import Link from "next/link";
-import { TEvt } from "pages/events/[slug]";
+import { Tevt } from "pages/events/[slug]";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 
 interface TDashboardEventProps {
-  evt: TEvt["attributes"];
+  evt: Tevt;
 
   handleDelete: (id: number) => void;
 }

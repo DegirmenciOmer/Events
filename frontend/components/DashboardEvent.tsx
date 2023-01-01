@@ -11,8 +11,6 @@ interface TDashboardEventProps {
 }
 
 const DashboardEvent: FC<TDashboardEventProps> = ({ evt, handleDelete }) => {
-  console.log(evt);
-
   return (
     <div className={styles.event}>
       <Link href={`/events/${evt.slug}`}>

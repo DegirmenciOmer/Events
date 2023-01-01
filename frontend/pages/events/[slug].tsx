@@ -51,6 +51,8 @@ const EventPage: FC<TEvtProps> = ({ evt: { id, attributes: evt } }) => {
     }
   };
   const date = new Date(evt.date).toLocaleDateString("nl-NL");
+  console.log(evt);
+
   return (
     <Layout>
       <div className={styles.event}>
@@ -75,7 +77,10 @@ const EventPage: FC<TEvtProps> = ({ evt: { id, attributes: evt } }) => {
         {evt?.image && (
           <div className={styles.image}>
             <Image
-              src={evt?.image?.data?.attributes?.formats?.medium.url}
+              src={
+                evt?.image?.data?.attributes?.formats?.medium ??
+                evt?.image?.data?.attributes?.formats?.thumbnail.url
+              }
               width={960}
               height={600}
             />

@@ -16,7 +16,7 @@ const EventItem: FC<TEventItemProps> = ({ evt }) => {
       <div className={styles.img}>
         <Image
           src={
-            evt?.image?.data?.attributes?.formats?.medium.url ??
+            evt?.image?.data?.attributes?.formats?.medium?.url ??
             "/images/event-default.png"
           }
           width={170}

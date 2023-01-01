@@ -7,6 +7,7 @@ import { FaPencilAlt, FaTimes } from "react-icons/fa";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { ToastContainer, toast } from "react-toastify";
+import { useAuth } from "@/context/AuthContext";
 
 interface TEvtProps {
   evt: TEvtData;
@@ -35,6 +36,8 @@ export type TEvents = { events: TEvtData[] };
 const EventPage: FC<TEvtProps> = ({ evt: { id, attributes: evt } }) => {
   const router = useRouter();
 
+  const { user } = useAuth();
+
   const deleteEvent = async (e: any) => {
     if (confirm("Are you sure?")) {
       const res = await fetch(`${API_URL}/api/events/${id}`, {
@@ -59,20 +62,24 @@ const EventPage: FC<TEvtProps> = ({ evt: { id, attributes: evt } }) => {
         <Link href="/">
           <a className={styles.back}>{"<"} Go Back</a>
         </Link>
-        <div className={styles.controls}>
-          <Link href={`/events/edit/${id}`}>
-            <span>
-              <FaPencilAlt /> Edit Event
-            </span>
-          </Link>
-          <div className={styles.delete} onClick={deleteEvent}>
-            <FaTimes /> Delete Event
+        {user && (
+          <div className={styles.controls}>
+            <Link href={`/events/edit/${id}`}>
+              <span>
+                <FaPencilAlt /> Edit Event
+              </span>
+            </Link>
+            <div className={styles.delete} onClick={deleteEvent}>
+              <FaTimes /> Delete Event
+            </div>
           </div>
+        )}
+        <div className={styles.heading}>
+          <h1>{evt?.name}</h1>
+          <p>
+            {date} at {evt?.time}
+          </p>
         </div>
-        <span>
-          {date} at {evt?.time}
-        </span>
-        <h1>{evt?.name}</h1>
         <ToastContainer />
         {evt?.image && (
           <div className={styles.image}>

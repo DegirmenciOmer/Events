@@ -42,7 +42,7 @@ const AddEventPage = ({ token }) => {
     });
 
     if (!res.ok) {
-      if (res.status === 403 || res.status == 401) {
+      if (res.status === 403 || res.status === 401) {
         toast.error("Not authorized");
         return;
       }

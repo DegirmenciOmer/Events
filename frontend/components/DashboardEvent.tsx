@@ -1,5 +1,5 @@
 import styles from "../styles/DashboardEvent.module.css";
-import React, { FC, MouseEventHandler } from "react";
+import React, { FC } from "react";
 import Link from "next/link";
 import { Tevt } from "pages/events/[slug]";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
@@ -16,7 +16,7 @@ const DashboardEvent: FC<TDashboardEventProps> = ({ evt, handleDelete }) => {
       <Link href={`/events/${evt.slug}`}>
         <h4>{evt.name}</h4>
       </Link>
-      <Link href={`/events/edit/${evt.slug}`}>
+      <Link href={`/events/edit/${evt.id}`}>
         <span className={styles.edit}>
           <FaPencilAlt />
           Edit

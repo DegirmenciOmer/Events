@@ -47,8 +47,6 @@ export const getServerSideProps = async ({ req }) => {
     },
   });
   const events = await res.json();
-  console.log(token);
-  console.log(events);
 
   return {
     props: { events },

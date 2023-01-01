@@ -26,6 +26,12 @@
   color: red;
 }
 
+.heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .back {
   display: block;
   margin-top: 40px;

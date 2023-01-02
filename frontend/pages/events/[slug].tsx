@@ -3,11 +3,8 @@ import Layout from "@/components/Layout";
 import { API_URL } from "@/config/index";
 import styles from "@/styles/Event.module.css";
 import Link from "next/link";
-import { FaPencilAlt, FaTimes } from "react-icons/fa";
 import Image from "next/image";
-import { useRouter } from "next/router";
-import { ToastContainer, toast } from "react-toastify";
-import { useAuth } from "@/context/AuthContext";
+import { ToastContainer } from "react-toastify";
 
 interface TEvtProps {
   evt: TEvtData;
@@ -34,27 +31,7 @@ export type Tevt = {
 export type TEvents = { events: TEvtData[] };
 
 const EventPage: FC<TEvtProps> = ({ evt: { id, attributes: evt } }) => {
-  const router = useRouter();
-
-  const { user } = useAuth();
-
-  const deleteEvent = async (e: any) => {
-    if (confirm("Are you sure?")) {
-      const res = await fetch(`${API_URL}/api/events/${id}`, {
-        method: "DELETE",
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        toast.error(data.message);
-      } else {
-        router.push(`/events`);
-      }
-    }
-  };
   const date = new Date(evt.date).toLocaleDateString("nl-NL");
-  console.log(evt);
 
   return (
     <Layout>
@@ -62,18 +39,6 @@ const EventPage: FC<TEvtProps> = ({ evt: { id, attributes: evt } }) => {
         <Link href="/">
           <a className={styles.back}>{"<"} Go Back</a>
         </Link>
-        {user && (
-          <div className={styles.controls}>
-            <Link href={`/events/edit/${id}`}>
-              <span>
-                <FaPencilAlt /> Edit Event
-              </span>
-            </Link>
-            <div className={styles.delete} onClick={deleteEvent}>
-              <FaTimes /> Delete Event
-            </div>
-          </div>
-        )}
         <div className={styles.heading}>
           <h1>{evt?.name}</h1>
           <p>

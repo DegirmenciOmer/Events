@@ -7,81 +7,38 @@
 const { createCoreController } = require("@strapi/strapi").factories;
 
 module.exports = createCoreController("api::event.event", ({ strapi }) => ({
-  async create(ctx) {
-    let entity;
-    if (ctx.is("multipart")) {
-      const { data, files } = parseMultipartData(ctx);
-      data.user = ctx.state.user.id;
-      entity = await strapi.services.events.create(data, { files });
-    } else {
-      ctx.request.body.user = ctx.state.user.id;
-      entity = await strapi.services.events.create(ctx.request.body);
-    }
-    return sanitizeEntity(entity, { model: strapi.models.events });
-  },
-  // Update user event
-  async update(ctx) {
-    const { id } = ctx.params;
-
-    let entity;
-
-    const [events] = await strapi.services.events.find({
-      id: ctx.params.id,
-      "user.id": ctx.state.user.id,
-    });
-
-    if (!events) {
-      return ctx.unauthorized(`You can't update this entry`);
-    }
-
-    if (ctx.is("multipart")) {
-      const { data, files } = parseMultipartData(ctx);
-      entity = await strapi.services.events.update({ id }, data, {
-        files,
-      });
-    } else {
-      entity = await strapi.services.events.update({ id }, ctx.request.body);
-    }
-
-    return sanitizeEntity(entity, { model: strapi.models.events });
-  },
-  // Delete a user event
-  async delete(ctx) {
-    const { id } = ctx.params;
-
-    const [events] = await strapi.services.events.find({
-      id: ctx.params.id,
-      "user.id": ctx.state.user.id,
-    });
-
-    if (!events) {
-      return ctx.unauthorized(`You can't update this entry`);
-    }
-
-    const entity = await strapi.services.events.delete({ id });
-    return sanitizeEntity(entity, { model: strapi.models.events });
-  },
-  // Get logged in users
-  async me(ctx) {
+  async me(ctx, next) {
     const user = ctx.state.user;
-
     if (!user) {
       return ctx.badRequest(null, [
-        { message: "No authorization header was found" },
+        { messages: [{ id: "No auth header found" }] },
       ]);
     }
 
-    const data = await strapi.db.query("api::event.event").findMany({
-      where: {
-        user: { id: user.id },
+    const data = await strapi.entityService.findMany("api::event.event", {
+      populate: "image",
+      filters: {
+        user: {
+          id: user.id,
+        },
       },
-      populate: { user: true, image: true },
     });
     if (!data) {
       return ctx.notFound();
     }
 
-    const res = await this.sanitizeOutput(data, ctx);
-    return res;
+    const sanitizedEvents = await this.sanitizeOutput(data, ctx);
+
+    return this.transformResponse(sanitizedEvents);
+  },
+  async create(ctx) {
+    const { id } = ctx.state.user; //ctx.state.user contains the current authenticated user
+    const response = await super.create(ctx);
+    const updatedResponse = await strapi.entityService.update(
+      "api::event.event",
+      response.data.id,
+      { data: { user: id } }
+    );
+    return updatedResponse;
   },
 }));

@@ -18,6 +18,7 @@ const AddEventPage = ({ token }) => {
     time: "",
     description: "",
     slug: "",
+    publishedAt: new Date().getTime(),
   });
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -50,7 +51,7 @@ const AddEventPage = ({ token }) => {
     } else {
       const evt = await res.json();
 
-      if (evt) router.push(`/events/${evt.data.attributes.slug}`);
+      if (evt) router.push(`/events/${evt.slug}`);
     }
   };
 
@@ -154,7 +155,6 @@ export default AddEventPage;
 
 export const getServerSideProps = async ({ req }) => {
   const { token } = parseCookies(req);
-  console.log({ token });
 
   return {
     props: { token },

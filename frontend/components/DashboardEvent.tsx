@@ -6,11 +6,15 @@ import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 
 interface TDashboardEventProps {
   evt: Tevt;
-
-  handleDelete: (id: number) => void;
+  token: string;
+  handleDelete: (id: any, token: any) => void;
 }
 
-const DashboardEvent: FC<TDashboardEventProps> = ({ evt, handleDelete }) => {
+const DashboardEvent: FC<TDashboardEventProps> = ({
+  evt,
+  handleDelete,
+  token,
+}) => {
   return (
     <div className={styles.event}>
       <Link href={`/events/${evt.slug}`}>
@@ -22,7 +26,10 @@ const DashboardEvent: FC<TDashboardEventProps> = ({ evt, handleDelete }) => {
           Edit
         </span>
       </Link>
-      <div onClick={() => handleDelete(evt.id)} className={styles.delete}>
+      <div
+        onClick={() => handleDelete(evt.id, token)}
+        className={styles.delete}
+      >
         <FaTrashAlt />
         Delete
       </div>

@@ -20,11 +20,11 @@ const DashboardEvent: FC<TDashboardEventProps> = ({
       <Link href={`/events/${evt.slug}`}>
         <h4>{evt.name}</h4>
       </Link>
-      <Link href={`/events/edit/${evt.id}`}>
-        <span className={styles.edit}>
+      <Link href={`/events/edit/${evtId}`}>
+        <div className={styles.edit}>
           <FaPencilAlt />
           Edit
-        </span>
+        </div>
       </Link>
       <div onClick={() => handleDelete(evtId)} className={styles.delete}>
         <FaTrashAlt />

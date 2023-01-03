@@ -7,7 +7,7 @@ import DashboardEvent from "@/components/DashboardEvent";
 import { useRouter } from "next/router";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "react-toastify";
-import { Tevt } from "pages/events/[slug]";
+import { TEvtData } from "pages/events/[slug]";
 
 const DashboardPage = ({ events, token }) => {
   const router = useRouter();
@@ -20,7 +20,7 @@ const DashboardPage = ({ events, token }) => {
     return;
   }, [error, user]);
 
-  const deleteEvent = async (id: number, token: string) => {
+  const deleteEvent = async (id: number) => {
     if (confirm("Are you sure?")) {
       const res = await fetch(`${API_URL}/api/events/${id}`, {
         method: "DELETE",
@@ -44,15 +44,17 @@ const DashboardPage = ({ events, token }) => {
       <div className={styles.dash}>
         <h1>Dashboard</h1>
         <h3>My Events</h3>
-        {events.length > 0 &&
-          events.map((evt: Tevt) => (
-            <DashboardEvent
-              handleDelete={deleteEvent}
-              evt={evt}
-              key={evt.id}
-              token={token}
-            />
-          ))}
+        {events.data.length > 0 &&
+          events.data.map((evt: TEvtData) => {
+            return (
+              <DashboardEvent
+                handleDelete={deleteEvent}
+                evt={evt.attributes}
+                evtId={evt.id}
+                key={evt.id}
+              />
+            );
+          })}
       </div>
     </Layout>
   );

@@ -41,4 +41,43 @@ module.exports = createCoreController("api::event.event", ({ strapi }) => ({
     );
     return updatedResponse;
   },
+  //delete
+  async delete(ctx) {
+    var { id } = ctx.state.user;
+    var [event] = await strapi.entityService.findMany("api::event.event", {
+      filters: {
+        id: ctx.request.params.id,
+        user: id,
+      },
+    });
+    if (event) {
+      const response = await super.delete(ctx);
+      console.log(response);
+      const updatedResponse = await strapi.entityService.update(
+        "api::event.event",
+        response.data.id,
+        { data: { user: id } }
+      );
+      console.log({ updatedResponse });
+      return updatedResponse;
+    } else {
+      return ctx.unauthorized();
+    }
+  },
+  //update
+  async update(ctx) {
+    var { id } = ctx.state.user;
+    var [event] = await strapi.entityService.findMany("api::event.event", {
+      filters: {
+        id: ctx.request.params.id,
+        user: id,
+      },
+    });
+    if (event) {
+      const response = await super.update(ctx);
+      return response;
+    } else {
+      return ctx.unauthorized();
+    }
+  },
 }));

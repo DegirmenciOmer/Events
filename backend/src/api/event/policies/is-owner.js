@@ -8,8 +8,6 @@ module.exports = async (ctx, config, { strapi }) => {
 
   const { id: eventId } = ctx.request.params;
 
-  console.log({ userId, eventId });
-
   strapi.log.info("In is-owner policy.");
 
   const [event] = await strapi.entityService.findMany("api::event.event", {

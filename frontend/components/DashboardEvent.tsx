@@ -1,30 +1,32 @@
 import styles from "../styles/DashboardEvent.module.css";
-import React, { FC, MouseEventHandler } from "react";
+import React, { FC } from "react";
 import Link from "next/link";
-import { TEvt } from "pages/events/[slug]";
+import { Tevt } from "pages/events/[slug]";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 
 interface TDashboardEventProps {
-  evt: TEvt["attributes"];
-
+  evt: Tevt;
   handleDelete: (id: number) => void;
+  evtId: number;
 }
 
-const DashboardEvent: FC<TDashboardEventProps> = ({ evt, handleDelete }) => {
-  console.log(evt);
-
+const DashboardEvent: FC<TDashboardEventProps> = ({
+  evt,
+  evtId,
+  handleDelete,
+}) => {
   return (
     <div className={styles.event}>
       <Link href={`/events/${evt.slug}`}>
         <h4>{evt.name}</h4>
       </Link>
-      <Link href={`/events/edit/${evt.slug}`}>
-        <span className={styles.edit}>
+      <Link href={`/events/edit/${evtId}`}>
+        <div className={styles.edit}>
           <FaPencilAlt />
           Edit
-        </span>
+        </div>
       </Link>
-      <div onClick={() => handleDelete(evt.id)} className={styles.delete}>
+      <div onClick={() => handleDelete(evtId)} className={styles.delete}>
         <FaTrashAlt />
         Delete
       </div>

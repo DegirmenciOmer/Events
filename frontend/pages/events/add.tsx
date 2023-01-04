@@ -5,9 +5,9 @@ import Layout from "@/components/Layout";
 import Link from "next/link";
 import { API_URL } from "@/config/index";
 import { useRouter } from "next/router";
+import { parseCookies } from "helpers";
 
-useRouter;
-const AddEventPage = () => {
+const AddEventPage = ({ token }) => {
   const router = useRouter();
   const [values, setValues] = useState({
     name: "",
@@ -18,6 +18,7 @@ const AddEventPage = () => {
     time: "",
     description: "",
     slug: "",
+    publishedAt: new Date().getTime(),
   });
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -31,20 +32,26 @@ const AddEventPage = () => {
     }
     // Post data
     const data = { data: { ...values } };
+
     const res = await fetch(`${API_URL}/api/events`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(data),
     });
 
     if (!res.ok) {
+      if (res.status === 403 || res.status === 401) {
+        toast.error("Not authorized");
+        return;
+      }
       toast.error("Something went wrong");
     } else {
       const evt = await res.json();
 
-      if (evt) router.push(`/events/${evt.data.attributes.slug}`);
+      if (evt) router.push(`/events/${evt.slug}`);
     }
   };
 
@@ -145,3 +152,11 @@ const AddEventPage = () => {
 };
 
 export default AddEventPage;
+
+export const getServerSideProps = async ({ req }) => {
+  const { token } = parseCookies(req);
+
+  return {
+    props: { token },
+  };
+};

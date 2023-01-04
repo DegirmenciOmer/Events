@@ -2,7 +2,7 @@ import Layout from "@/components/Layout";
 import EventItem from "@/components/EventItem";
 import { API_URL } from "@/config/index";
 import React, { FC } from "react";
-import { TEvents, TEvt } from "./[slug]";
+import { TEvents, TEvtData } from "./[slug]";
 import Pagination from "@/components/Pagination";
 import { PER_PAGE } from "util/utils";
 
@@ -16,10 +16,10 @@ const EventPage: FC<TEventPageProps> = ({ events, total, page }) => {
   return (
     <Layout>
       <h1>Events</h1>
-      {events.length === 0 ? (
+      {!events || events.length === 0 ? (
         <h3>No event found</h3>
       ) : (
-        events.map((evt: TEvt) => (
+        events.map((evt: TEvtData) => (
           <EventItem evt={evt.attributes} key={evt.id} />
         ))
       )}
@@ -38,9 +38,9 @@ export async function getServerSideProps({ query: { page = 1 } }) {
   const events = await res.json();
   return {
     props: {
-      events: events.data,
+      events: events?.data ?? null,
       page: +page,
-      total: events.meta.pagination.total,
+      total: events?.meta?.pagination?.total || 0,
     },
   };
 }

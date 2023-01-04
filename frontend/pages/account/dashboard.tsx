@@ -2,14 +2,41 @@ import Layout from "@/components/Layout";
 import { API_URL } from "@/config/index";
 import { parseCookies } from "helpers";
 import styles from "@/styles/Dashboard.module.css";
-import React from "react";
+import React, { useEffect } from "react";
 import DashboardEvent from "@/components/DashboardEvent";
+import { useRouter } from "next/router";
+import { useAuth } from "@/context/AuthContext";
+import { toast } from "react-toastify";
+import { TEvtData } from "pages/events/[slug]";
 
-const DashboardPage = ({ events }) => {
-  console.log(events);
+const DashboardPage = ({ events, token }) => {
+  const router = useRouter();
+  const { error, user } = useAuth();
 
-  const deleteEvent = (id) => {
-    console.log("delete", id);
+  useEffect(() => {
+    if (!user) router.push("/account/login");
+
+    if (error) toast.error(error);
+    return;
+  }, [error, user]);
+
+  const deleteEvent = async (id: number) => {
+    if (confirm("Are you sure?")) {
+      const res = await fetch(`${API_URL}/api/events/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.message);
+      } else {
+        router.reload();
+      }
+    }
   };
 
   return (
@@ -17,9 +44,17 @@ const DashboardPage = ({ events }) => {
       <div className={styles.dash}>
         <h1>Dashboard</h1>
         <h3>My Events</h3>
-        {events.map((evt) => (
-          <DashboardEvent handleDelete={deleteEvent} evt={evt} key={evt.id} />
-        ))}
+        {events.data.length > 0 &&
+          events.data.map((evt: TEvtData) => {
+            return (
+              <DashboardEvent
+                handleDelete={deleteEvent}
+                evt={evt.attributes}
+                evtId={evt.id}
+                key={evt.id}
+              />
+            );
+          })}
       </div>
     </Layout>
   );
@@ -34,8 +69,9 @@ export const getServerSideProps = async ({ req }) => {
     },
   });
   const events = await res.json();
+
   return {
-    props: { events },
+    props: { events, token },
   };
 };
 export default DashboardPage;

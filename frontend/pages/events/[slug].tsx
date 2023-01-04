@@ -3,77 +3,56 @@ import Layout from "@/components/Layout";
 import { API_URL } from "@/config/index";
 import styles from "@/styles/Event.module.css";
 import Link from "next/link";
-import { FaPencilAlt, FaTimes } from "react-icons/fa";
 import Image from "next/image";
-import { useRouter } from "next/router";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 interface TEvtProps {
-  evt: TEvt;
+  evt: TEvtData;
 }
 
-export type TEvt = {
+export type TEvtData = {
   id: number;
-  attributes: {
-    id?: number;
-    address: string;
-    name: string;
-    slug: string;
-    date: string;
-    time: string;
-    venue: string;
-    description: string;
-    image: any;
-    performers: string;
-  };
+  attributes: Tevt;
 };
 
-export type TEvents = { events: TEvt[] };
+export type Tevt = {
+  id?: number;
+  address: string;
+  name: string;
+  slug: string;
+  date: string;
+  time: string;
+  venue: string;
+  description: string;
+  image: any;
+  performers: string;
+};
+
+export type TEvents = { events: TEvtData[] };
 
 const EventPage: FC<TEvtProps> = ({ evt: { id, attributes: evt } }) => {
-  const router = useRouter();
-
-  const deleteEvent = async (e: any) => {
-    if (confirm("Are you sure?")) {
-      const res = await fetch(`${API_URL}/api/events/${id}`, {
-        method: "DELETE",
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        toast.error(data.message);
-      } else {
-        router.push(`/events`);
-      }
-    }
-  };
   const date = new Date(evt.date).toLocaleDateString("nl-NL");
+
   return (
     <Layout>
       <div className={styles.event}>
         <Link href="/">
           <a className={styles.back}>{"<"} Go Back</a>
         </Link>
-        <div className={styles.controls}>
-          <Link href={`/events/edit/${id}`}>
-            <span>
-              <FaPencilAlt /> Edit Event
-            </span>
-          </Link>
-          <div className={styles.delete} onClick={deleteEvent}>
-            <FaTimes /> Delete Event
-          </div>
+        <div className={styles.heading}>
+          <h1>{evt?.name}</h1>
+          <p>
+            {date} at {evt?.time}
+          </p>
         </div>
-        <span>
-          {date} at {evt?.time}
-        </span>
-        <h1>{evt?.name}</h1>
         <ToastContainer />
         {evt?.image && (
           <div className={styles.image}>
             <Image
-              src={evt?.image?.data?.attributes?.formats?.medium.url}
+              src={
+                evt?.image?.data?.attributes?.formats?.medium ??
+                evt?.image?.data?.attributes?.formats?.thumbnail.url
+              }
               width={960}
               height={600}
             />
@@ -113,7 +92,7 @@ export async function getStaticPaths() {
 
   const { data: events } = await res.json();
 
-  const paths = events.map((evt: TEvt) => ({
+  const paths = events.map((evt: TEvtData) => ({
     params: { slug: evt.attributes.slug },
   }));
 

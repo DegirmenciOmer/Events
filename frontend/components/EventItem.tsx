@@ -2,10 +2,10 @@ import styles from "../styles/EventItem.module.css";
 import React, { FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { TEvt } from "pages/events/[slug]";
+import { Tevt } from "pages/events/[slug]";
 
 interface TEventItemProps {
-  evt: TEvt["attributes"];
+  evt: Tevt;
 }
 
 const EventItem: FC<TEventItemProps> = ({ evt }) => {
@@ -16,7 +16,7 @@ const EventItem: FC<TEventItemProps> = ({ evt }) => {
       <div className={styles.img}>
         <Image
           src={
-            evt?.image?.data?.attributes?.formats?.medium.url ??
+            evt?.image?.data?.attributes?.formats?.medium?.url ??
             "/images/event-default.png"
           }
           width={170}

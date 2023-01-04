@@ -44,7 +44,7 @@ const DashboardPage = ({ events, token }) => {
       <div className={styles.dash}>
         <h1>Dashboard</h1>
         <h3>My Events</h3>
-        {events.data.length > 0 &&
+        {events?.data?.length > 0 &&
           events.data.map((evt: TEvtData) => {
             return (
               <DashboardEvent

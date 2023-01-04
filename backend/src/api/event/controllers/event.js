@@ -71,7 +71,6 @@ module.exports = createCoreController("api::event.event", ({ strapi }) => ({
         user: id,
       },
     });
-    console.log({ event, id });
     if (event) {
       const response = await super.update(ctx);
       return response;

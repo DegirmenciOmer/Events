@@ -52,13 +52,11 @@ module.exports = createCoreController("api::event.event", ({ strapi }) => ({
     });
     if (event) {
       const response = await super.delete(ctx);
-      console.log(response);
       const updatedResponse = await strapi.entityService.update(
         "api::event.event",
         response.data.id,
         { data: { user: id } }
       );
-      console.log({ updatedResponse });
       return updatedResponse;
     } else {
       return ctx.unauthorized();
@@ -73,6 +71,7 @@ module.exports = createCoreController("api::event.event", ({ strapi }) => ({
         user: id,
       },
     });
+    console.log({ event, id });
     if (event) {
       const response = await super.update(ctx);
       return response;

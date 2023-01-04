@@ -16,7 +16,7 @@ const EventPage: FC<TEventPageProps> = ({ events, total, page }) => {
   return (
     <Layout>
       <h1>Events</h1>
-      {events.length === 0 ? (
+      {!events || events.length === 0 ? (
         <h3>No event found</h3>
       ) : (
         events.map((evt: TEvtData) => (
@@ -38,9 +38,9 @@ export async function getServerSideProps({ query: { page = 1 } }) {
   const events = await res.json();
   return {
     props: {
-      events: events.data,
+      events: events?.data ?? null,
       page: +page,
-      total: events.meta.pagination.total,
+      total: events?.meta?.pagination?.total || 0,
     },
   };
 }

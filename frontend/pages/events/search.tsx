@@ -5,6 +5,7 @@ import { API_URL } from "@/config/index";
 import React from "react";
 import { useRouter } from "next/router";
 import { queryHelper } from "util/query";
+import { TEvtData } from "./[slug]";
 
 const SearchPage = ({ data }) => {
   const router = useRouter();
@@ -14,7 +15,9 @@ const SearchPage = ({ data }) => {
       {data.length === 0 ? (
         <h3>No event found</h3>
       ) : (
-        data.map((evt) => <EventItem evt={evt.attributes} key={evt.id} />)
+        data.map((evt: TEvtData) => (
+          <EventItem evt={evt.attributes} key={evt.id} />
+        ))
       )}
     </Layout>
   );

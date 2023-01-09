@@ -121,7 +121,7 @@ export async function getServerSideProps({ query: { slug } }) {
 
   return {
     props: {
-      evt: evt.length > 0 ? evt[0] : null,
+      evt: evt && evt.length > 0 ? evt[0] : null,
     },
   };
 }
